@@ -50,3 +50,48 @@ app.post('/appAgregarDatosGenerales', (req, res) =>{
         res.json('Se insertaron los datos correctamente')
     })
 })
+
+app.post('/appAgregarFechaVisita', (req,res)=>{
+    const fechaVisita ={
+        visita1_fecha: req.body.visita1_fecha,
+        visita1_hora: req.body.visita1_hora,
+        visita1_resultado: req.body.visita1_resultado,
+        visita2_fecha: req.body.visita2_fecha,
+        visita2_hora: req.body.visita2_hora,
+        visita2_resultado: req.body.visita2_resultado,
+        visita3_fecha: req.body.visita3_fecha,
+        visita3_hora: req.body.visita3_hora,
+        visita3_resultado: req.body.visita3_resultado
+    }
+    const query = 'INSERT INTO t_visitas SET ?'
+    conexion.query(query, fechaVisita, (error)=>{
+        if (error) return console.error(error.message)
+        
+        res.json('Se insertaron los datos correctamente')
+    })
+})
+
+app.post('/appAgregarDatosVivienda', (req,res)=>{
+    const datosVivienda = {
+        vivienda_localizada: req.body.vivienda_localizada,
+        vivienda_habitada: req.body.vivienda_habitada,
+        verificacion_metodo: req.body.verificacion_metodo,
+        verificacion_otro: req.body.verificacion_otro,
+        vecino_nombre: req.body.vecino_nombre,
+        acreditado_vive: req.body.acreditado_vive,
+        jefe_familia_nombre: req.body.jefe_familia_nombre,
+        jefe_familia_relacion: req.body.jefe_familia_relacion,
+        fecha_ocupacion: req.body.fecha_ocupacion,
+        situacion_vivienda: req.body.situacion_vivienda,
+        documento_traspaso: req.body.documento_traspaso,
+        tipo_documento_traspaso: req.body.tipo_documento,
+        documento_mostrado: req.body.documento_mostrado,
+        documento_copia_entregada: req.body.documento_copia_entregada
+    }
+    const query = 'INSERT INTO t_vivienda SET ?'
+    conexion.query(query, datosVivienda, (error)=>{
+        if (error) return console.error(error.message)
+        
+        res.json('Se insertaron los datos correctamente')
+    })
+})
