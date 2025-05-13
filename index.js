@@ -95,3 +95,57 @@ app.post('/appAgregarDatosVivienda', (req,res)=>{
         res.json('Se insertaron los datos correctamente')
     })
 })
+
+app.post('/appAgregarDatosFechaCredito', (req,res)=>{
+    const datosCredito = {
+        credito_fecha_entrega: req.body.credito_fecha_entrega,
+        credito_monto: req.body.credito_monto,
+        credito_suelto_otorgado: req.body.credito_suelto_otorgado,
+        credito_fecha_ultimo_pago: req.body.credito_fecha_ultimo_pago,
+        credito_recibo_pago: req.body.credito_recibo_pago,
+        credito_pago_actual: req.body.credito_pago_actual,
+        credito_deuda_actual: req.body.credito_deuda_actual
+    }
+    const query = 'INSERT INTO t_credito SET ?'
+    conexion.query(query, datosCredito, (error)=>{
+        if(error) return console.error(error.message)
+
+        res.json('Se insertaron correctamente los datos')
+    })
+})
+
+app.post('/appAgregarDatosReestructura', (req,res)=>{
+    const datosReestructura ={
+        reestructura_motivo: req.body.reestructura_motivo,
+        reestructura_documento: req.body.reestructura_documento,
+        reestructura_tipo_documento: req.body.reestructura_tipo_documento,
+        reestructura_solicitante_es_acred: req.body.reestructura_solicitante_es_acred,
+        reestructura_solicitante_nombre: req.body.reestructura_solicitante_nombre,
+        reestructura_parentesco: req.body.reestructura_parentesco,
+        reestructura_motivo_personal: req.body.reestructura_motivo_personal,
+        reestructura_sexo: req.body.reestructura_sexo,
+        reestructura_fecha_nacimiento: req.body.reestructura_fecha_nacimiento,
+        reestructura_edad: req.body.reestructura_edad,
+        reestructura_lugar_nacimiento: req.body.reestructura_lugar_nacimiento,
+        reestructura_grado_estudios: req.body.reestructura_grado_estudios,
+        reestructura_conocimiento_comp: req.body.reestructura_conocimiento_comp,
+        reestructura_discapacidad: req.body.reestructura_discapacidad,
+        reestructura_dictamen: req.body.reestructura_dictamen,
+        reestructura_institucion_dictamen: req.body.reestructura_institucion_dictamen,
+        reestructura_fecha_dictamen: req.body.reestructura_fecha_dictamen,
+        reestructura_porcentaje_discapacidad: req.body.reestructura_porcentaje_discapacidad,
+        reestructura_estado_civil: req.body.reestructura_estado_civil,
+        reestructura_fecha_estado_civil: req.body.reestructura_fecha_estado_civil,
+        reestructura_exesposo_aportacion: req.body.reestructura_exesposo_aportacion,
+        reestructura_exesposo_monto: req.body.reestructura_exesposo_monto,
+        reestructura_regimen_conyugal: req.body.reestructura_regimen_conyugal,
+        reestructura_vive_con_conyuge: req.body.reestructura_vive_con_conyuge,
+        reestructura_fecha_no_convive: req.body.reestructura_fecha_no_convive
+    }
+    const query = 'INSERT INTO t_reestructura SET ?'
+    conexion.query(query, datosReestructura, (error)=>{
+        if(error) return console.error(error.message)
+        
+        res.json('Se insertaron correctamente los datos')
+    })
+})
