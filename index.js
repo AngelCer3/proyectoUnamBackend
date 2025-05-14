@@ -149,3 +149,53 @@ app.post('/appAgregarDatosReestructura', (req,res)=>{
         res.json('Se insertaron correctamente los datos')
     })
 })
+
+app.post('/appAgregarDatosConyuge', (req,res)=>{
+    const datosConyuge ={
+        conyuge_nombre: req.body.conyuge_nombre,
+        conyuge_sexo: req.body.conyuge_sexo,
+        conyuge_fecha_nacimiento: req.body.conyuge_fecha_nacimiento,
+        conyuge_edad: req.body.conyuge_edad,
+        conyuge_grado_estudios: req.body.conyuge_grado_estudios,
+        conyuge_comp_computo: req.body.conyuge_comp_computo
+    }
+    const query = 'INSERT INTO t_conyuge SET ?'
+    conexion.query(query, datosConyuge, (error)=>{
+        if(error) return console.error(error.message)
+        
+        res.json('Se insertaron correctamente los datos')
+    })
+})
+
+app.post('/appAgregarDatosFamilia', (req, res)=>{
+    const datosFamilia ={
+        familia_integrantes: req.body.familia_integrantes,
+        familia_total_ocupantes: req.body.familia_total_ocupantes,
+        familia_tipo: req.body.familia_tipo,
+        edad_0_5_hombres: req.body.edad_0_5_hombres,
+        edad_0_5_mujeres: req.body.edad_0_5_mujeres,
+        edad_6_12_hombres: req.body.edad_6_12_hombres,
+        edad_6_12_mujeres: req.body.edad_6_12_mujeres,
+        edad_13_18_hombres: req.body.edad_13_18_hombres,
+        edad_13_18_mujeres: req.body.edad_13_18_mujeres,
+        edad_19_35_hombres: req.body.edad_19_35_hombres,
+        edad_19_35_mujeres: req.body.edad_19_35_mujeres,
+        edad_36_59_hombres: req.body.edad_36_59_hombres,
+        edad_36_59_mujeres: req.body.edad_36_59_mujeres,
+        edad_60_mas_hombres: req.body.edad_60_mas_hombres,
+        edad_60_mas_mujeres: req.body.edad_60_mas_mujeres,
+        escuela_asistencia: req.body.escuela_asistencia,
+        escolaridad_niveles: req.body.escolaridad_niveles,
+        familiares_enfermedad: req.body.familiares_enfermedad,
+        familiares_enfermedad_cuantos: req.body.familiares_enfermedad_cuantos,
+        comprobante_enfermedad: req.body.comprobante_enfermedad,
+        tratamiento_recibido: req.body.tratamiento_recibido,
+        tratamiento_lugar: req.body.tratamiento_lugar
+    }
+    const query = 'INSERT INTO t_familiares SET ?'
+    conexion.query(query, datosFamilia, (error)=>{
+        if(error) return console.error(error.message)
+        
+        res.json('Se insertaron correctamente los datos')
+    })
+})
