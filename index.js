@@ -150,8 +150,8 @@ app.post('/appAgregarDatosReestructura', (req,res)=>{
     })
 })
 
-app.post('/appAgregarDatosConyuge', (req,res)=>{
-    const datosConyuge ={
+app.post('/appAgregarDatosGeneralesConyuge', (req,res)=>{
+    const datosGeneralesConyuge ={
         conyuge_nombre: req.body.conyuge_nombre,
         conyuge_sexo: req.body.conyuge_sexo,
         conyuge_fecha_nacimiento: req.body.conyuge_fecha_nacimiento,
@@ -160,7 +160,7 @@ app.post('/appAgregarDatosConyuge', (req,res)=>{
         conyuge_comp_computo: req.body.conyuge_comp_computo
     }
     const query = 'INSERT INTO t_conyuge SET ?'
-    conexion.query(query, datosConyuge, (error)=>{
+    conexion.query(query, datosGeneralesConyuge, (error)=>{
         if(error) return console.error(error.message)
         
         res.json('Se insertaron correctamente los datos')
@@ -197,5 +197,216 @@ app.post('/appAgregarDatosFamilia', (req, res)=>{
         if(error) return console.error(error.message)
         
         res.json('Se insertaron correctamente los datos')
+    })
+})
+
+app.post('/appAgregarDatosSolicitante', (req,res)=>{
+    const datosSolicitante={
+        hogar_integrantes_trabajando: req.body.hogar_integrantes_trabajando,
+        solicitante_activo: req.body.solicitante_activo,
+        solicitante_ocupacion_actual: req.body.solicitante_ocupacion_actual,
+        solicitante_desempleado_tiempo: req.body.solicitante_desempleado_tiempo,
+        solicitante_empresa_previa: req.body.solicitante_empresa_previa,
+        solicitante_antiguedad_trabajo_anterior: req.body.solicitante_antiguedad_trabajo_anterior,
+        institucion_trabajo_solicitante: req.body.institucion_trabajo_solicitante,
+        actividad_remunerada_solicitante: req.body.actividad_remunerada_solicitante,
+        contrato_laboral_solicitante: req.body.contrato_laboral_solicitante,
+        solicitante_ingreso_mensual: req.body.solicitante_ingreso_mensual,
+        solicitante_empresa: req.body.solicitante_empresa,
+        solicitante_antiguedad: req.body.solicitante_antiguedad,
+        comprobante_ingresos_solicitante: req.body.comprobante_ingresos_solicitante,
+        institucion_cotizacion_solicitante: req.body.institucion_cotizacion_solicitante,
+        ingresos_conceptos_solicitante: req.body.ingresos_conceptos_solicitante
+    }
+    const query = 'INSERT INTO t_solicitante SET ?'
+    conexion.query(query, datosSolicitante, (error)=>{
+        if(error) return console.error(error.message)
+
+        res.json('Se insertaron correctamente los datos')
+    })
+})
+
+app.post('/appAgregarDatosOtrosFamiliares', (req,res)=>{
+    const datosOtrosFamiliares = {
+        otros_habitantes_actividad: req.body.otros_habitantes_actividad,
+        hijo_numero: req.body.hijo_numero,
+        hijo_actividad: req.body.hijo_actividad,
+        hijo_aportacion: req.body.hijo_aportacion,
+        padre_numero: req.bodq.padre_numero,
+        padre_actividad: req.body.padre_actividad,
+        padre_aportacion: req.body.padre_aportacion,
+        madre_numero: req.body.madre_numero,
+        madre_actividad: req.body.madre_actividad,
+        madre_aportacion: req.body.madre_aportacion,
+        suegros_numero: req.body.suegros_numero,
+        suegros_actividad: req.body.suegros_actividad,
+        suegros_aportacion: req.body.suegros_aportacion,
+        hermanos_numero: req.body.hermanos_numero,
+        hermanos_actividad: req.body.hermanos_actividad,
+        hermanos_aportacion: req.body.hermanos_aportacion,
+        nietos_numeros: req.body.nietos_numeros,
+        nietos_actividad: req.body.nietos_actividad,
+        nietos_aportacion: req.body.nietos_aportacion,
+        yernos_nueras_numero: req.body.yernos_nueras_numero,
+        yernos_nueras_actividad: req.body.yernos_nueras_actividad,
+        yernos_nueras_aportacion: req.body.yernos_nueras_aportacion,
+        otros_familiares_numero: req.body.otros_familiares_numero,
+        otros_familiares_actividad: req.body.otros_familiares_actividad,
+        otros_familiares_aportacion: req.body.otros_familiares_aportacion,
+        no_familiares_numero: req.body.no_familiares_numero,
+        no_familiares_actividad: req.body.no_familiares_actividad,
+        no_familiares_aportacion: req.body.no_familiares_aportacion
+    }
+    const query = 'INSERT INTO t_otrosFamiliares SET ?'
+    conexion.query(query, datosOtrosFamiliares, (error)=>{
+        if(error) return console.error(error.message)
+        
+        res.json('Se insertaron correctamente los datos')
+    })
+})
+
+app.post('/appAgregarDatosGastos', (req,res)=>{
+    const datosGastos = {
+        gasto_despensa_alimentacion: req.body.gasto_despensa_alimentacion,
+        gasto_despensa_motivo: req.body.gasto_despensa_motivo,
+        gasto_gas: req.body.gasto_gas,
+        gasto_gas_motivo: req.body.gasto_gas_motivo,
+        gasto_luz: req.body.gasto_luz,
+        gasto_luz_motivo: req.body.gasto_luz_motivo,
+        gasto_agua: req.body.gasto_agua,
+        gasto_agua_motivo: req.body.gasto_agua_motivo,
+        gasto_servicio_telefonico: req.body.gasto_servicio_telefonico,
+        gasto_servicio_telefonico_motivo: req.body.gasto_servicio_telefonico_motivo,
+        gasto_mantenimiento_vivienda: req.body.gasto_mantenimiento_vivienda,
+        gasto_mantenimiento_motivo: req.body.gasto_mantenimiento_motivo,
+        gasto_transporte_publico: req.body.gasto_transporte_publico,
+        gasto_transporte_motivo: req.body.gasto_transporte_motivo,
+        gasto_gasolina: req.body.gasto_gasolina,
+        gasto_gasolina_motivo: req.body.gasto_gasolina_motivo,
+        gasto_servicios_salud: req.body.gasto_servicios_salud,
+        gasto_salud_motivo: req.body.gasto_salud_motivo,
+        gasto_educacion: req.body.gasto_educacion,
+        gasto_educacion_motivo: req.body.gasto_educacion_motivo,
+        gasto_recreacion: req.body.gasto_recreacion,
+        gasto_recreacion_motivo: req.body.gasto_recreacion_motivo,
+        gasto_comidas_fuera: req.body.gasto_comidas_fuera,
+        gasto_comidas_fuera_motivo: req.body.gasto_comidas_fuera_motivo,
+        gasto_vestido_calzado: req.body.gasto_vestido_calzado,
+        gasto_vestido_calzado_motivo: req.body.gasto_vestido_calzado_motivo,
+        gasto_pension_vehiculo: req.body.gasto_pension_vehiculo,
+        gasto_pension_vehiculo_motivo: req.body.gasto_pension_vehiculo_motivo,
+        gasto_telefono_celular: req.body.gasto_telefono_celular,
+        gasto_telefono_celular_motivo: req.body.gasto_telefono_celular_motivo,
+        gasto_television_pago: req.body.gasto_television_pago,
+        gasto_television_pago_motivo: req.body.gasto_television_pago_motivo,
+        gasto_pago_creditos: req.body.gasto_pago_creditos,
+        gasto_pago_creditos_motivo: req.body.gasto_pago_creditos_motivo,
+        gasto_otros_descripcion: req.body.gasto_otros_descripcion,
+        gasto_otros_motivo: req.body.gasto_otros_motivo,
+        gasto_metodo_pago: req.body.gasto_metodo_pago
+    }
+    const query = 'INSERT INTO t_gastos SET ?'
+    conexion.query(query, datosGastos, (error)=>{
+        if(error) return console.error(error.message)
+        
+        res.json('Se insertaron correctamente los datos')
+    })
+})
+
+app.post('/appAgregarDatosFamiliaDeudas', (req,res)=>{
+    const datosFamiliaDeudas = {
+        familia_tiene_deudas: req.body.familia_tiene_deudas,
+        familia_cantidad_deuda: req.body.familia_cantidad_deuda
+    }
+    const query = 'INSERT INTO t_deudas SET ?'
+    conexion.query(query, datosFamiliaDeudas, (error)=>{
+        if(error) return console.error(error.message)
+
+        res.json('Se insertaron correctamente los datos')
+    })
+})
+
+app.post('/appAgregarDatosTelefono', (req,res)=>{
+    const datosTelefonicos = {
+        telefono1_lada: req.body.telefono1_lada,
+        telefono1_numero: req.body.telefono1_numero,
+        telefono1_extension: req.body.telefono1_extension,
+        telefono1_tipo: req.body.telefono1_tipo,
+        telefono2_lada: req.body.telefono2_lada,
+        telefono2_numero: req.body.telefono2_numero,
+        telefono2_extension: req.body.telefono2_extension,
+        telefono2_tipo: req.body.telefono2_tipo,
+    }
+    const query = 'INSERT INTO t_telefonos SET ?'
+    conexion.query(query, datosTelefonicos, (error)=>{
+        if(error) return console.error(error.message)
+
+        res.json('Se insertaron correctamente los datos')
+    })
+})
+
+app.post('/appAgregarDatosCobranza', (req,res)=>{
+    const datosCobranza = {
+        cobranza_visita: req.body.cobranza_visita,
+        cobranza_numero_visitas: req.body.cobranza_numero_visitas,
+        cobranza_ultima_fecha_visita: req.body.cobranza_ultima_fecha_visita,
+        cobranza_despacho: req.body.cobranza_despacho,
+        cobranza_calificacion: req.body.cobranza_calificacion,
+        cobranza_comentario: req.body.cobranza_comentario
+    }
+    const query = 'INSERT INTO t_cobranza SET ?'
+    conexion.query(query, datosCobranza, (error)=>{
+        if(error) return console.error(error.message)
+
+        res.json('Se insertaron correctamente los datos')
+    })
+})
+
+app.post('/appAgregarDatosDocumentos', (req,res)=>{
+    const datosDocumentos = {
+        doc_credencial_votar_cuenta: req.body.doc_credencial_votar_cuenta,
+        doc_credencial_votar_mostro: req.body.doc_credencial_votar_mostro,
+        doc_credencial_votar_entrego_copia: req.body.doc_credencial_votar_entrego_copia,
+        doc_poder_amplio_cuenta: req.body.doc_poder_amplio_cuenta,
+        doc_poder_amplio_mostro: req.body.doc_poder_amplio_mostro,
+        doc_poder_amplio_entrego_copia: req.body.doc_poder_amplio_entrego_copia,
+        doc_comprobante_ingresos_cuenta: req.body.doc_comprobante_ingresos_cuenta,
+        doc_comprobante_ingresos_mostro: req.body.doc_comprobante_ingresos_mostro,
+        doc_comprobante_ingreso_entrego_copia: req.body.doc_comprobante_ingreso_entrego_copia
+    }
+
+    const query = 'INSERT INTO t_documentos SET ?'
+    conexion.query(query, datosDocumentos, (error)=>{
+        if(error) return console.error(error.message)
+
+        res.json('Se insertaron los datos correctamente')
+    })
+})
+
+app.post('/appAgregarDatosEspecificiosVivienda', (req,res)=>{
+    const datosEspecificosVivienda = {
+        vivienda_numero_habitaciones: req.body.vivienda_numero_habitaciones,
+        vivienda_tipo_piso: req.body.vivienda_tipo_piso,
+        vivienda_tipo_piso_otro: req.body.vivienda_tipo_piso_otro,
+        vivienda_tipo_techo: req.body.vivienda_tipo_techo,
+        viviendo_cuenta_bano: req.body.viviendo_cuenta_bano
+    }
+    const query = 'INSERT INTO t_especivivienda SET ?'
+    conexion.query(query, datosEspecificosVivienda, (error)=>{
+        if(error) return console.error(error.message)
+
+        res.json('Se insertaron los datos correctamente')
+    })
+})
+
+app.post('/appAgregarObservaciones', (req,res)=>{
+    const datosObservaciones = {
+        observaciones_entrevistador: req.body.observaciones_entrevistador
+    }
+    const query = 'INSERT INTO t_observaciones SET ?'
+    conexion.query(query, datosObservaciones, (error)=>{
+        if(error) return console.error(error.message)
+
+        res.json('Se inserto correctamente el comentario')
     })
 })
