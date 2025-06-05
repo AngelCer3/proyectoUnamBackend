@@ -25,7 +25,7 @@ conexion.connect(error =>{
     console.log('Conexion exitosa a la base de datos')
 })
 
-app.post('/appAgregarDatosGenerales', (req, res) =>{
+app.post('/appAgregarDatosGenerales', (req, res) => {
     const acreditado = {
         entidad_federativa: req.body.entidad_federativa,
         ciudad_municipio_delegacion: req.body.ciudad_municipio_delegacion,
@@ -42,14 +42,19 @@ app.post('/appAgregarDatosGenerales', (req, res) =>{
         domicilio_colonia: req.body.domicilio_colonia,
         domicilio_cp: req.body.domicilio_cp,
         domicilio_curp: req.body.domicilio_curp
-    }
-    const query = 'INSERT INTO t_generales SET ?'
-    conexion.query(query, acreditado, (error)=>{
-        if (error) return console.error(error.message)
-        
-        res.json('Se insertaron los datos correctamente')
-    })
-})
+    };
+
+    const query = 'INSERT INTO t_generales SET ?';
+    conexion.query(query, acreditado, (error, result) => {
+        if (error) return res.status(500).json({ success: false, error: error.message });
+
+        res.json({
+            success: true,
+            id_acreditado: result.insertId.toString()
+        });
+    });
+});
+
 
 app.post('/appAgregarFechaVisita', (req,res)=>{
     const fechaVisita ={
@@ -61,7 +66,8 @@ app.post('/appAgregarFechaVisita', (req,res)=>{
         visita2_resultado: req.body.visita2_resultado,
         visita3_fecha: req.body.visita3_fecha,
         visita3_hora: req.body.visita3_hora,
-        visita3_resultado: req.body.visita3_resultado
+        visita3_resultado: req.body.visita3_resultado,
+        id_acreditado: req.body.id_acreditado
     }
     const query = 'INSERT INTO t_visitas SET ?'
     conexion.query(query, fechaVisita, (error)=>{
@@ -78,15 +84,17 @@ app.post('/appAgregarDatosVivienda', (req,res)=>{
         verificacion_metodo: req.body.verificacion_metodo,
         verificacion_otro: req.body.verificacion_otro,
         vecino_nombre: req.body.vecino_nombre,
+        vecino_direccion: req.body.vecino_direccion,
         acreditado_vive: req.body.acreditado_vive,
         jefe_familia_nombre: req.body.jefe_familia_nombre,
         jefe_familia_relacion: req.body.jefe_familia_relacion,
         fecha_ocupacion: req.body.fecha_ocupacion,
         situacion_vivienda: req.body.situacion_vivienda,
         documento_traspaso: req.body.documento_traspaso,
-        tipo_documento_traspaso: req.body.tipo_documento,
+        tipo_documento_traspaso: req.body.tipo_documento_traspaso,
         documento_mostrado: req.body.documento_mostrado,
-        documento_copia_entregada: req.body.documento_copia_entregada
+        documento_copia_entregada: req.body.documento_copia_entregada,
+        id_acreditado: req.body.id_acreditado
     }
     const query = 'INSERT INTO t_vivienda SET ?'
     conexion.query(query, datosVivienda, (error)=>{
@@ -100,11 +108,12 @@ app.post('/appAgregarDatosFechaCredito', (req,res)=>{
     const datosCredito = {
         credito_fecha_entrega: req.body.credito_fecha_entrega,
         credito_monto: req.body.credito_monto,
-        credito_suelto_otorgado: req.body.credito_suelto_otorgado,
+        credito_sueldo_otorgado: req.body.credito_sueldo_otorgado,
         credito_fecha_ultimo_pago: req.body.credito_fecha_ultimo_pago,
         credito_recibo_pago: req.body.credito_recibo_pago,
         credito_pago_actual: req.body.credito_pago_actual,
-        credito_deuda_actual: req.body.credito_deuda_actual
+        credito_deuda_actual: req.body.credito_deuda_actual,
+        id_acreditado: req.body.id_acreditado
     }
     const query = 'INSERT INTO t_credito SET ?'
     conexion.query(query, datosCredito, (error)=>{
@@ -140,7 +149,9 @@ app.post('/appAgregarDatosReestructura', (req,res)=>{
         reestructura_exesposo_monto: req.body.reestructura_exesposo_monto,
         reestructura_regimen_conyugal: req.body.reestructura_regimen_conyugal,
         reestructura_vive_con_conyuge: req.body.reestructura_vive_con_conyuge,
-        reestructura_fecha_no_convive: req.body.reestructura_fecha_no_convive
+        reestructura_fecha_no_convive: req.body.reestructura_fecha_no_convive,
+        
+        id_acreditado: req.body.id_acreditado
     }
     const query = 'INSERT INTO t_reestructura SET ?'
     conexion.query(query, datosReestructura, (error)=>{
@@ -157,7 +168,8 @@ app.post('/appAgregarDatosGeneralesConyuge', (req,res)=>{
         conyuge_fecha_nacimiento: req.body.conyuge_fecha_nacimiento,
         conyuge_edad: req.body.conyuge_edad,
         conyuge_grado_estudios: req.body.conyuge_grado_estudios,
-        conyuge_comp_computo: req.body.conyuge_comp_computo
+        conyuge_comp_computo: req.body.conyuge_comp_computo,
+        id_acreditado: req.body.id_acreditado
     }
     const query = 'INSERT INTO t_conyuge SET ?'
     conexion.query(query, datosGeneralesConyuge, (error)=>{
@@ -190,7 +202,8 @@ app.post('/appAgregarDatosFamilia', (req, res)=>{
         familiares_enfermedad_cuantos: req.body.familiares_enfermedad_cuantos,
         comprobante_enfermedad: req.body.comprobante_enfermedad,
         tratamiento_recibido: req.body.tratamiento_recibido,
-        tratamiento_lugar: req.body.tratamiento_lugar
+        tratamiento_lugar: req.body.tratamiento_lugar,
+        id_acreditado: req.body.id_acreditado
     }
     const query = 'INSERT INTO t_familiares SET ?'
     conexion.query(query, datosFamilia, (error)=>{
@@ -216,10 +229,33 @@ app.post('/appAgregarDatosSolicitante', (req,res)=>{
         solicitante_antiguedad: req.body.solicitante_antiguedad,
         comprobante_ingresos_solicitante: req.body.comprobante_ingresos_solicitante,
         institucion_cotizacion_solicitante: req.body.institucion_cotizacion_solicitante,
-        ingresos_conceptos_solicitante: req.body.ingresos_conceptos_solicitante
+        ingresos_conceptos_solicitante: req.body.ingresos_conceptos_solicitante,
+        id_acreditado: req.body.id_acreditado
     }
     const query = 'INSERT INTO t_solicitante SET ?'
     conexion.query(query, datosSolicitante, (error)=>{
+        if(error) return console.error(error.message)
+
+        res.json('Se insertaron correctamente los datos')
+    })
+})
+
+app.post('/appAgregarDatosEspecificosConyuge', (req,res)=>{
+    const datosEspecificosConyuge ={
+        conyuge_activo: req.body.conyuge_activo,
+        conyuge_ocupacion_actual: req.body.conyuge_ocupacion_actual,
+        institucion_trabajo_conyuge: req.body.institucion_trabajo_conyuge,
+        conyuge_actividad_remunerada: req.body.conyuge_actividad_remunerada,
+        conyuge_contrato_laboral: req.body.conyuge_contrato_laboral,
+        conyuge_ingreso_mensual: req.body.conyuge_ingreso_mensual,
+        conyuge_empresa: req.body.conyuge_empresa,
+        conyuge_antiguedad: req.body.conyuge_antiguedad,
+        institucion_cotizacion_conyuge: req.body.institucion_cotizacion_conyuge,
+        ingresos_conceptos_conyuge: req.body.ingresos_conceptos_conyuge,
+        id_acreditado: req.body.id_acreditado
+    }
+    const query = 'INSERT INTO t_especiconyuge SET ?'
+    conexion.query(query, datosEspecificosConyuge, (error)=>{
         if(error) return console.error(error.message)
 
         res.json('Se insertaron correctamente los datos')
@@ -232,7 +268,7 @@ app.post('/appAgregarDatosOtrosFamiliares', (req,res)=>{
         hijo_numero: req.body.hijo_numero,
         hijo_actividad: req.body.hijo_actividad,
         hijo_aportacion: req.body.hijo_aportacion,
-        padre_numero: req.bodq.padre_numero,
+        padre_numero: req.body.padre_numero,
         padre_actividad: req.body.padre_actividad,
         padre_aportacion: req.body.padre_aportacion,
         madre_numero: req.body.madre_numero,
@@ -255,9 +291,10 @@ app.post('/appAgregarDatosOtrosFamiliares', (req,res)=>{
         otros_familiares_aportacion: req.body.otros_familiares_aportacion,
         no_familiares_numero: req.body.no_familiares_numero,
         no_familiares_actividad: req.body.no_familiares_actividad,
-        no_familiares_aportacion: req.body.no_familiares_aportacion
+        no_familiares_aportacion: req.body.no_familiares_aportacion,
+        id_acreditado: req.body.id_acreditado
     }
-    const query = 'INSERT INTO t_otrosFamiliares SET ?'
+    const query = 'INSERT INTO t_otrosfamiliares SET ?'
     conexion.query(query, datosOtrosFamiliares, (error)=>{
         if(error) return console.error(error.message)
         
@@ -303,7 +340,8 @@ app.post('/appAgregarDatosGastos', (req,res)=>{
         gasto_pago_creditos_motivo: req.body.gasto_pago_creditos_motivo,
         gasto_otros_descripcion: req.body.gasto_otros_descripcion,
         gasto_otros_motivo: req.body.gasto_otros_motivo,
-        gasto_metodo_pago: req.body.gasto_metodo_pago
+        gasto_metodo_pago: req.body.gasto_metodo_pago,
+        id_acreditado: req.body.id_acreditado
     }
     const query = 'INSERT INTO t_gastos SET ?'
     conexion.query(query, datosGastos, (error)=>{
@@ -316,7 +354,8 @@ app.post('/appAgregarDatosGastos', (req,res)=>{
 app.post('/appAgregarDatosFamiliaDeudas', (req,res)=>{
     const datosFamiliaDeudas = {
         familia_tiene_deudas: req.body.familia_tiene_deudas,
-        familia_cantidad_deuda: req.body.familia_cantidad_deuda
+        familia_cantidad_deudas: req.body.familia_cantidad_deuda,
+        id_acreditado: req.body.id_acreditado
     }
     const query = 'INSERT INTO t_deudas SET ?'
     conexion.query(query, datosFamiliaDeudas, (error)=>{
@@ -336,6 +375,7 @@ app.post('/appAgregarDatosTelefono', (req,res)=>{
         telefono2_numero: req.body.telefono2_numero,
         telefono2_extension: req.body.telefono2_extension,
         telefono2_tipo: req.body.telefono2_tipo,
+        id_acreditado: req.body.id_acreditado
     }
     const query = 'INSERT INTO t_telefonos SET ?'
     conexion.query(query, datosTelefonicos, (error)=>{
@@ -352,7 +392,8 @@ app.post('/appAgregarDatosCobranza', (req,res)=>{
         cobranza_ultima_fecha_visita: req.body.cobranza_ultima_fecha_visita,
         cobranza_despacho: req.body.cobranza_despacho,
         cobranza_calificacion: req.body.cobranza_calificacion,
-        cobranza_comentario: req.body.cobranza_comentario
+        cobranza_comentario: req.body.cobranza_comentario,
+        id_acreditado: req.body.id_acreditado
     }
     const query = 'INSERT INTO t_cobranza SET ?'
     conexion.query(query, datosCobranza, (error)=>{
@@ -372,7 +413,8 @@ app.post('/appAgregarDatosDocumentos', (req,res)=>{
         doc_poder_amplio_entrego_copia: req.body.doc_poder_amplio_entrego_copia,
         doc_comprobante_ingresos_cuenta: req.body.doc_comprobante_ingresos_cuenta,
         doc_comprobante_ingresos_mostro: req.body.doc_comprobante_ingresos_mostro,
-        doc_comprobante_ingreso_entrego_copia: req.body.doc_comprobante_ingreso_entrego_copia
+        doc_comprobante_ingresos_entrego_copia: req.body.doc_comprobante_ingreso_entrego_copia,
+        id_acreditado: req.body.id_acreditado
     }
 
     const query = 'INSERT INTO t_documentos SET ?'
@@ -389,7 +431,8 @@ app.post('/appAgregarDatosEspecificiosVivienda', (req,res)=>{
         vivienda_tipo_piso: req.body.vivienda_tipo_piso,
         vivienda_tipo_piso_otro: req.body.vivienda_tipo_piso_otro,
         vivienda_tipo_techo: req.body.vivienda_tipo_techo,
-        viviendo_cuenta_bano: req.body.viviendo_cuenta_bano
+        vivienda_cuenta_bano: req.body.vivienda_cuenta_bano,
+        id_acreditado: req.body.id_acreditado
     }
     const query = 'INSERT INTO t_especivivienda SET ?'
     conexion.query(query, datosEspecificosVivienda, (error)=>{
@@ -401,7 +444,8 @@ app.post('/appAgregarDatosEspecificiosVivienda', (req,res)=>{
 
 app.post('/appAgregarObservaciones', (req,res)=>{
     const datosObservaciones = {
-        observaciones_entrevistador: req.body.observaciones_entrevistador
+        observaciones_entrevistador: req.body.observaciones_entrevistador,
+        id_acreditado: req.body.id_acreditado
     }
     const query = 'INSERT INTO t_observaciones SET ?'
     conexion.query(query, datosObservaciones, (error)=>{
