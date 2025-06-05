@@ -25,6 +25,348 @@ conexion.connect(error =>{
     console.log('Conexion exitosa a la base de datos')
 })
 
+app.post('/appInicioSesion', (req, res) => {
+    const correo = req.body.correo;
+    const contrasena = req.body.contrasena;
+
+    const query = 'SELECT id_usuario, correo, id_rol FROM usuarios WHERE correo = ? AND contrasena = ?';
+
+    conexion.query(query, [correo, contrasena], (error, results) => {
+        if (error) {
+            console.error(error);
+            return res.status(500).json({ error: "Error del Servidor" });
+        }
+        if (results.length > 0) {
+            res.json({
+                message: 'Login Exitoso',
+                usuario: results[0]
+            });
+        } else {
+            res.status(401).json({ error: 'Credenciales Invalidas' });
+        }
+    });
+});
+
+
+app.get('/appObtenerAcreditados', (req,res)=>{
+    const query = "SELECT * FROM t_generales"
+    conexion.query(query, (error,results)=>{
+        if(error) return console.error(error.message)
+
+        if(results.length > 0 ){
+            res.json(results)
+        }else{
+            res.json("No hay registros")
+        }
+    })
+})
+
+app.get('/appObtenerFechaVisita/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const query = "SELECT * FROM t_visitas WHERE id_acreditado = ?";
+
+    conexion.query(query, [id_acreditado], (err, results) => {
+        if (err) {
+            console.error('Error al obtener visitas:', err);
+            res.status(500).json({ error: 'Error al obtener visitas' });
+        } else {
+            if (results.length > 0) {
+                res.json(results[0]); // Se espera solo un registro por acreditado
+            } else {
+                res.status(404).json({ error: 'Visitas no encontradas' });
+            }
+        }
+    });
+});
+
+// Vivienda
+app.get('/appObtenerDatosVivienda/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const query = "SELECT * FROM t_vivienda WHERE id_acreditado = ?";
+
+    conexion.query(query, [id_acreditado], (err, results) => {
+        if (err) {
+            console.error('Error al obtener datos vivienda:', err);
+            res.status(500).json({ error: 'Error al obtener datos vivienda' });
+        } else {
+            if (results.length > 0) {
+                res.json(results[0]);
+            } else {
+                res.status(404).json({ error: 'Datos de vivienda no encontrados' });
+            }
+        }
+    });
+});
+
+// Crédito
+app.get('/appObtenerDatosCredito/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const query = "SELECT * FROM t_credito WHERE id_acreditado = ?";
+
+    conexion.query(query, [id_acreditado], (err, results) => {
+        if (err) {
+            console.error('Error al obtener datos crédito:', err);
+            res.status(500).json({ error: 'Error al obtener datos crédito' });
+        } else {
+            if (results.length > 0) {
+                res.json(results[0]);
+            } else {
+                res.status(404).json({ error: 'Datos de crédito no encontrados' });
+            }
+        }
+    });
+});
+
+// Reestructura
+app.get('/appObtenerDatosReestructura/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const query = "SELECT * FROM t_reestructura WHERE id_acreditado = ?";
+
+    conexion.query(query, [id_acreditado], (err, results) => {
+        if (err) {
+            console.error('Error al obtener datos reestructura:', err);
+            res.status(500).json({ error: 'Error al obtener datos reestructura' });
+        } else {
+            if (results.length > 0) {
+                res.json(results[0]);
+            } else {
+                res.status(404).json({ error: 'Datos de reestructura no encontrados' });
+            }
+        }
+    });
+});
+
+// Cónyuge
+app.get('/appObtenerDatosConyuge/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const query = "SELECT * FROM t_conyuge WHERE id_acreditado = ?";
+
+    conexion.query(query, [id_acreditado], (err, results) => {
+        if (err) {
+            console.error('Error al obtener datos cónyuge:', err);
+            res.status(500).json({ error: 'Error al obtener datos cónyuge' });
+        } else {
+            if (results.length > 0) {
+                res.json(results[0]);
+            } else {
+                res.status(404).json({ error: 'Datos de cónyuge no encontrados' });
+            }
+        }
+    });
+});
+
+// Familiares
+app.get('/appObtenerDatosFamiliares/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const query = "SELECT * FROM t_familiares WHERE id_acreditado = ?";
+
+    conexion.query(query, [id_acreditado], (err, results) => {
+        if (err) {
+            console.error('Error al obtener datos familiares:', err);
+            res.status(500).json({ error: 'Error al obtener datos familiares' });
+        } else {
+            if (results.length > 0) {
+                // Solo devolver el primer objeto del array
+                res.json(results[0]);
+            } else {
+                res.status(404).json({ error: 'Datos familiares no encontrados' });
+            }
+        }
+    });
+});
+
+
+// Solicitante
+app.get('/appObtenerDatosSolicitante/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const query = "SELECT * FROM t_solicitante WHERE id_acreditado = ?";
+
+    conexion.query(query, [id_acreditado], (err, results) => {
+        if (err) {
+            console.error('Error al obtener datos solicitante:', err);
+            res.status(500).json({ error: 'Error al obtener datos solicitante' });
+        } else {
+            if (results.length > 0) {
+                res.json(results[0]);
+            } else {
+                res.status(404).json({ error: 'Datos solicitante no encontrados' });
+            }
+        }
+    });
+});
+
+// Datos específicos cónyuge
+app.get('/appObtenerDatosEspecificosConyuge/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const query = "SELECT * FROM t_especiconyuge WHERE id_acreditado = ?";
+
+    conexion.query(query, [id_acreditado], (err, results) => {
+        if (err) {
+            console.error('Error al obtener datos específicos cónyuge:', err);
+            res.status(500).json({ error: 'Error al obtener datos específicos cónyuge' });
+        } else {
+            if (results.length > 0) {
+                res.json(results[0]);
+            } else {
+                res.status(404).json({ error: 'Datos específicos cónyuge no encontrados' });
+            }
+        }
+    });
+});
+
+// Otros familiares
+app.get('/appObtenerDatosOtrosFamiliares/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const query = "SELECT * FROM t_otrosfamiliares WHERE id_acreditado = ?";
+
+    conexion.query(query, [id_acreditado], (err, results) => {
+        if (err) {
+            console.error('Error al obtener datos otros familiares:', err);
+            res.status(500).json({ error: 'Error al obtener datos otros familiares' });
+        } else {
+            if (results.length > 0) {
+                res.json(results[0]);
+            } else {
+                res.status(404).json({ error: 'Datos otros familiares no encontrados' });
+            }
+        }
+    });
+});
+
+// Gastos
+app.get('/appObtenerDatosGastos/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const query = "SELECT * FROM t_gastos WHERE id_acreditado = ?";
+
+    conexion.query(query, [id_acreditado], (err, results) => {
+        if (err) {
+            console.error('Error al obtener datos gastos:', err);
+            res.status(500).json({ error: 'Error al obtener datos gastos' });
+        } else {
+            if (results.length > 0) {
+                res.json(results[0]);
+            } else {
+                res.status(404).json({ error: 'Datos gastos no encontrados' });
+            }
+        }
+    });
+});
+
+// Familia deudas
+app.get('/appObtenerDatosFamiliaDeudas/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const query = "SELECT * FROM t_deudas WHERE id_acreditado = ?";
+
+    conexion.query(query, [id_acreditado], (err, results) => {
+        if (err) {
+            console.error('Error al obtener datos familia deudas:', err);
+            res.status(500).json({ error: 'Error al obtener datos familia deudas' });
+        } else {
+            if (results.length > 0) {
+                res.json(results[0]);
+            } else {
+                res.status(404).json({ error: 'Datos familia deudas no encontrados' });
+            }
+        }
+    });
+});
+
+// Teléfonos
+app.get('/appObtenerDatosTelefonos/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const query = "SELECT * FROM t_telefonos WHERE id_acreditado = ?";
+
+    conexion.query(query, [id_acreditado], (err, results) => {
+        if (err) {
+            console.error('Error al obtener datos teléfonos:', err);
+            res.status(500).json({ error: 'Error al obtener datos teléfonos' });
+        } else {
+            if (results.length > 0) {
+                res.json(results[0]);
+            } else {
+                res.status(404).json({ error: 'Datos teléfonos no encontrados' });
+            }
+        }
+    });
+});
+
+// Cobranza
+app.get('/appObtenerDatosCobranza/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const query = "SELECT * FROM t_cobranza WHERE id_acreditado = ?";
+
+    conexion.query(query, [id_acreditado], (err, results) => {
+        if (err) {
+            console.error('Error al obtener datos cobranza:', err);
+            res.status(500).json({ error: 'Error al obtener datos cobranza' });
+        } else {
+            if (results.length > 0) {
+                res.json(results[0]);
+            } else {
+                res.status(404).json({ error: 'Datos cobranza no encontrados' });
+            }
+        }
+    });
+});
+
+// Documentos
+app.get('/appObtenerDatosDocumentos/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const query = "SELECT * FROM t_documentos WHERE id_acreditado = ?";
+
+    conexion.query(query, [id_acreditado], (err, results) => {
+        if (err) {
+            console.error('Error al obtener datos documentos:', err);
+            res.status(500).json({ error: 'Error al obtener datos documentos' });
+        } else {
+            if (results.length > 0) {
+                res.json(results[0]);
+            } else {
+                res.status(404).json({ error: 'Datos documentos no encontrados' });
+            }
+        }
+    });
+});
+
+// Datos específicos vivienda
+app.get('/appObtenerDatosEspecificosVivienda/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const query = "SELECT * FROM t_especivivienda WHERE id_acreditado = ?";
+
+    conexion.query(query, [id_acreditado], (err, results) => {
+        if (err) {
+            console.error('Error al obtener datos específicos vivienda:', err);
+            res.status(500).json({ error: 'Error al obtener datos específicos vivienda' });
+        } else {
+            if (results.length > 0) {
+                res.json(results[0]);
+            } else {
+                res.status(404).json({ error: 'Datos específicos vivienda no encontrados' });
+            }
+        }
+    });
+});
+
+// Observaciones
+app.get('/appObtenerDatosObservaciones/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const query = "SELECT * FROM t_observaciones WHERE id_acreditado = ?";
+
+    conexion.query(query, [id_acreditado], (err, results) => {
+        if (err) {
+            console.error('Error al obtener datos observaciones:', err);
+            res.status(500).json({ error: 'Error al obtener datos observaciones' });
+        } else {
+            if (results.length > 0) {
+                res.json(results[0]);
+            } else {
+                res.status(404).json({ error: 'Datos observaciones no encontrados' });
+            }
+        }
+    });
+});
+
+
 app.post('/appAgregarDatosGenerales', (req, res) => {
     const acreditado = {
         entidad_federativa: req.body.entidad_federativa,
@@ -200,6 +542,7 @@ app.post('/appAgregarDatosFamilia', (req, res)=>{
         escolaridad_niveles: req.body.escolaridad_niveles,
         familiares_enfermedad: req.body.familiares_enfermedad,
         familiares_enfermedad_cuantos: req.body.familiares_enfermedad_cuantos,
+        familiares_enfermedad_quien: req.body.familiares_enfermedad_quien,
         comprobante_enfermedad: req.body.comprobante_enfermedad,
         tratamiento_recibido: req.body.tratamiento_recibido,
         tratamiento_lugar: req.body.tratamiento_lugar,
@@ -413,7 +756,7 @@ app.post('/appAgregarDatosDocumentos', (req,res)=>{
         doc_poder_amplio_entrego_copia: req.body.doc_poder_amplio_entrego_copia,
         doc_comprobante_ingresos_cuenta: req.body.doc_comprobante_ingresos_cuenta,
         doc_comprobante_ingresos_mostro: req.body.doc_comprobante_ingresos_mostro,
-        doc_comprobante_ingresos_entrego_copia: req.body.doc_comprobante_ingreso_entrego_copia,
+        doc_comprobante_ingresos_entrego_copia: req.body.doc_comprobante_ingresos_entrego_copia,
         id_acreditado: req.body.id_acreditado
     }
 
@@ -454,3 +797,275 @@ app.post('/appAgregarObservaciones', (req,res)=>{
         res.json('Se inserto correctamente el comentario')
     })
 })
+
+app.put('/appActualizarDatosGenerales/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const nuevosDatos = req.body;
+
+    const query = 'UPDATE t_generales SET ? WHERE id_acreditado = ?';
+    conexion.query(query, [nuevosDatos, id_acreditado], (error, result) => {
+        if (error) return res.status(500).json({ success: false, error: error.message });
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontró el acreditado' });
+        }
+        
+        res.json({ success: true, message: 'Datos generales actualizados' });
+    });
+});
+
+app.put('/appActualizarFechaVisita/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const nuevosDatos = req.body;
+
+    const query = 'UPDATE t_visitas SET ? WHERE id_acreditado = ?';
+    conexion.query(query, [nuevosDatos, id_acreditado], (error, result) => {
+        if (error) return res.status(500).json({ success: false, error: error.message });
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontró el acreditado' });
+        }
+        
+        res.json({ success: true, message: 'Fechas de visita actualizadas' });
+    });
+});
+
+app.put('/appActualizarDatosVivienda/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const nuevosDatos = req.body;
+
+    const query = 'UPDATE t_vivienda SET ? WHERE id_acreditado = ?';
+    conexion.query(query, [nuevosDatos, id_acreditado], (error, result) => {
+        if (error) return res.status(500).json({ success: false, error: error.message });
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontró el acreditado' });
+        }
+        
+        res.json({ success: true, message: 'Datos de vivienda actualizados' });
+    });
+});
+
+app.put('/appActualizarDatosFechaCredito/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const nuevosDatos = req.body;
+
+    const query = 'UPDATE t_credito SET ? WHERE id_acreditado = ?';
+    conexion.query(query, [nuevosDatos, id_acreditado], (error, result) => {
+        if (error) return res.status(500).json({ success: false, error: error.message });
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontró el acreditado' });
+        }
+        
+        res.json({ success: true, message: 'Datos de crédito actualizados' });
+    });
+});
+
+app.put('/appActualizarDatosReestructura/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const nuevosDatos = req.body;
+
+    const query = 'UPDATE t_reestructura SET ? WHERE id_acreditado = ?';
+    conexion.query(query, [nuevosDatos, id_acreditado], (error, result) => {
+        if (error) return res.status(500).json({ success: false, error: error.message });
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontró el acreditado' });
+        }
+        
+        res.json({ success: true, message: 'Datos de reestructura actualizados' });
+    });
+});
+
+app.put('/appActualizarDatosGeneralesConyuge/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const nuevosDatos = req.body;
+
+    const query = 'UPDATE t_conyuge SET ? WHERE id_acreditado = ?';
+    conexion.query(query, [nuevosDatos, id_acreditado], (error, result) => {
+        if (error) return res.status(500).json({ success: false, error: error.message });
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontró el acreditado' });
+        }
+        
+        res.json({ success: true, message: 'Datos del cónyuge actualizados' });
+    });
+});
+
+app.put('/appActualizarDatosFamilia/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const nuevosDatos = req.body;
+
+    const query = 'UPDATE t_familiares SET ? WHERE id_acreditado = ?';
+    conexion.query(query, [nuevosDatos, id_acreditado], (error, result) => {
+        if (error) return res.status(500).json({ success: false, error: error.message });
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontró el acreditado' });
+        }
+        
+        res.json({ success: true, message: 'Datos familiares actualizados' });
+    });
+});
+
+app.put('/appActualizarDatosSolicitante/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const nuevosDatos = req.body;
+
+    const query = 'UPDATE t_solicitante SET ? WHERE id_acreditado = ?';
+    conexion.query(query, [nuevosDatos, id_acreditado], (error, result) => {
+        if (error) return res.status(500).json({ success: false, error: error.message });
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontró el acreditado' });
+        }
+        
+        res.json({ success: true, message: 'Datos del solicitante actualizados' });
+    });
+});
+
+app.put('/appActualizarDatosEspecificosConyuge/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const nuevosDatos = req.body;
+
+    const query = 'UPDATE t_especiconyuge SET ? WHERE id_acreditado = ?';
+    conexion.query(query, [nuevosDatos, id_acreditado], (error, result) => {
+        if (error) return res.status(500).json({ success: false, error: error.message });
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontró el acreditado' });
+        }
+        
+        res.json({ success: true, message: 'Datos específicos del cónyuge actualizados' });
+    });
+});
+
+app.put('/appActualizarDatosOtrosFamiliares/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const nuevosDatos = req.body;
+
+    const query = 'UPDATE t_otrosfamiliares SET ? WHERE id_acreditado = ?';
+    conexion.query(query, [nuevosDatos, id_acreditado], (error, result) => {
+        if (error) return res.status(500).json({ success: false, error: error.message });
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontró el acreditado' });
+        }
+        
+        res.json({ success: true, message: 'Datos de otros familiares actualizados' });
+    });
+});
+
+app.put('/appActualizarDatosGastos/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const nuevosDatos = req.body;
+
+    const query = 'UPDATE t_gastos SET ? WHERE id_acreditado = ?';
+    conexion.query(query, [nuevosDatos, id_acreditado], (error, result) => {
+        if (error) return res.status(500).json({ success: false, error: error.message });
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontró el acreditado' });
+        }
+        
+        res.json({ success: true, message: 'Datos de gastos actualizados' });
+    });
+});
+
+app.put('/appActualizarDatosFamiliaDeudas/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const nuevosDatos = req.body;
+
+    const query = 'UPDATE t_deudas SET ? WHERE id_acreditado = ?';
+    conexion.query(query, [nuevosDatos, id_acreditado], (error, result) => {
+        if (error) return res.status(500).json({ success: false, error: error.message });
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontró el acreditado' });
+        }
+        
+        res.json({ success: true, message: 'Datos de deudas actualizados' });
+    });
+});
+
+app.put('/appActualizarDatosTelefono/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const nuevosDatos = req.body;
+
+    const query = 'UPDATE t_telefonos SET ? WHERE id_acreditado = ?';
+    conexion.query(query, [nuevosDatos, id_acreditado], (error, result) => {
+        if (error) return res.status(500).json({ success: false, error: error.message });
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontró el acreditado' });
+        }
+        
+        res.json({ success: true, message: 'Datos telefónicos actualizados' });
+    });
+});
+
+app.put('/appActualizarDatosCobranza/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const nuevosDatos = req.body;
+
+    const query = 'UPDATE t_cobranza SET ? WHERE id_acreditado = ?';
+    conexion.query(query, [nuevosDatos, id_acreditado], (error, result) => {
+        if (error) return res.status(500).json({ success: false, error: error.message });
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontró el acreditado' });
+        }
+        
+        res.json({ success: true, message: 'Datos de cobranza actualizados' });
+    });
+});
+
+app.put('/appActualizarDatosDocumentos/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const nuevosDatos = req.body;
+
+    const query = 'UPDATE t_documentos SET ? WHERE id_acreditado = ?';
+    conexion.query(query, [nuevosDatos, id_acreditado], (error, result) => {
+        if (error) return res.status(500).json({ success: false, error: error.message });
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontró el acreditado' });
+        }
+        
+        res.json({ success: true, message: 'Datos de documentos actualizados' });
+    });
+});
+
+app.put('/appActualizarDatosEspecificiosVivienda/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const nuevosDatos = req.body;
+
+    const query = 'UPDATE t_especivivienda SET ? WHERE id_acreditado = ?';
+    conexion.query(query, [nuevosDatos, id_acreditado], (error, result) => {
+        if (error) return res.status(500).json({ success: false, error: error.message });
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontró el acreditado' });
+        }
+        
+        res.json({ success: true, message: 'Datos específicos de vivienda actualizados' });
+    });
+});
+
+app.put('/appActualizarObservaciones/:id', (req, res) => {
+    const id_acreditado = req.params.id;
+    const nuevosDatos = req.body;
+
+    const query = 'UPDATE t_observaciones SET ? WHERE id_acreditado = ?';
+    conexion.query(query, [nuevosDatos, id_acreditado], (error, result) => {
+        if (error) return res.status(500).json({ success: false, error: error.message });
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'No se encontró el acreditado' });
+        }
+        
+        res.json({ success: true, message: 'Observaciones actualizadas' });
+    });
+});
