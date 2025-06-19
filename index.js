@@ -59,6 +59,25 @@ app.post("/appInicioSesion", (req, res) => {
   });
 });
 
+app.get("/obtenerUsuario/:id", (req, res) => {
+  const id_usuario = req.params.id;
+  const query =
+    "SELECT id_usuario, correo, id_rol FROM usuarios WHERE id_usuario = ?";
+
+  conexion.query(query, [id_usuario], (error, results) => {
+    if (error) {
+      console.error("Error al obtener el usuario:", error.message);
+      return res.status(500).json({ error: "Error al obtener el usuario" });
+    }
+
+    if (results.length > 0) {
+      res.json(results[0]);
+    } else {
+      res.status(404).json({ mensaje: "Usuario no encontrado" });
+    }
+  });
+});
+
 app.get("/appObtenerAcreditadosPorId/:id", (req, res) => {
   const id_usuario = req.params.id; // usar parámetro URL
 
@@ -76,8 +95,6 @@ app.get("/appObtenerAcreditadosPorId/:id", (req, res) => {
     res.json(results); // Siempre array
   });
 });
-
-
 
 app.get("/appObtenerAcreditados", (req, res) => {
   const query = "SELECT * FROM t_generales";
@@ -408,12 +425,12 @@ app.get("/appObtenerDatosObservaciones/:id", (req, res) => {
   });
 });
 
-app.get("/appObtenerDatosCoordenadas/:id", (req,res)=>{
-  const id_acreditado = req.params.id
-  const query ="SELECT * FROM t_coordenadas WHERE id_acreditado = ?";
+app.get("/appObtenerDatosCoordenadas/:id", (req, res) => {
+  const id_acreditado = req.params.id;
+  const query = "SELECT * FROM t_coordenadas WHERE id_acreditado = ?";
 
-  conexion.query(query, [id_acreditado], (err,results)=>{
-     if (err) {
+  conexion.query(query, [id_acreditado], (err, results) => {
+    if (err) {
       console.error("Error al obtener datos observaciones:", err);
       res.status(500).json({ error: "Error al obtener datos cartograficos" });
     } else {
@@ -423,8 +440,8 @@ app.get("/appObtenerDatosCoordenadas/:id", (req,res)=>{
         res.status(404).json({ error: "Datos cartograficos no encontrados" });
       }
     }
-  })
-})
+  });
+});
 
 app.post("/appAgregarDatosGenerales", (req, res) => {
   const acreditado = {
@@ -476,7 +493,10 @@ app.post("/appAgregarFechaVisita", (req, res) => {
   conexion.query(query, fechaVisita, (error) => {
     if (error) return console.error(error.message);
 
-    res.json("Se insertaron los datos correctamente");
+    res.status(200).json({
+      success: true,
+      message: "Se insertaron los datos correctamente",
+    });
   });
 });
 
@@ -504,7 +524,10 @@ app.post("/appAgregarDatosVivienda", (req, res) => {
   conexion.query(query, datosVivienda, (error) => {
     if (error) return console.error(error.message);
 
-    res.json("Se insertaron los datos correctamente");
+    res.status(200).json({
+      success: true,
+      message: "Se insertaron los datos correctamente",
+    });
   });
 });
 
@@ -524,7 +547,10 @@ app.post("/appAgregarDatosFechaCredito", (req, res) => {
   conexion.query(query, datosCredito, (error) => {
     if (error) return console.error(error.message);
 
-    res.json("Se insertaron correctamente los datos");
+    res.status(200).json({
+      success: true,
+      message: "Se insertaron los datos correctamente",
+    });
   });
 });
 
@@ -565,7 +591,10 @@ app.post("/appAgregarDatosReestructura", (req, res) => {
   conexion.query(query, datosReestructura, (error) => {
     if (error) return console.error(error.message);
 
-    res.json("Se insertaron correctamente los datos");
+    res.status(200).json({
+      success: true,
+      message: "Se insertaron los datos correctamente",
+    });
   });
 });
 
@@ -584,7 +613,10 @@ app.post("/appAgregarDatosGeneralesConyuge", (req, res) => {
   conexion.query(query, datosGeneralesConyuge, (error) => {
     if (error) return console.error(error.message);
 
-    res.json("Se insertaron correctamente los datos");
+    res.status(200).json({
+      success: true,
+      message: "Se insertaron los datos correctamente",
+    });
   });
 });
 
@@ -620,7 +652,10 @@ app.post("/appAgregarDatosFamilia", (req, res) => {
   conexion.query(query, datosFamilia, (error) => {
     if (error) return console.error(error.message);
 
-    res.json("Se insertaron correctamente los datos");
+    res.status(200).json({
+      success: true,
+      message: "Se insertaron los datos correctamente",
+    });
   });
 });
 
@@ -650,7 +685,10 @@ app.post("/appAgregarDatosSolicitante", (req, res) => {
   conexion.query(query, datosSolicitante, (error) => {
     if (error) return console.error(error.message);
 
-    res.json("Se insertaron correctamente los datos");
+    res.status(200).json({
+      success: true,
+      message: "Se insertaron los datos correctamente",
+    });
   });
 });
 
@@ -674,7 +712,10 @@ app.post("/appAgregarDatosEspecificosConyuge", (req, res) => {
   conexion.query(query, datosEspecificosConyuge, (error) => {
     if (error) return console.error(error.message);
 
-    res.json("Se insertaron correctamente los datos");
+    res.status(200).json({
+      success: true,
+      message: "Se insertaron los datos correctamente",
+    });
   });
 });
 
@@ -715,7 +756,10 @@ app.post("/appAgregarDatosOtrosFamiliares", (req, res) => {
   conexion.query(query, datosOtrosFamiliares, (error) => {
     if (error) return console.error(error.message);
 
-    res.json("Se insertaron correctamente los datos");
+    res.status(200).json({
+      success: true,
+      message: "Se insertaron los datos correctamente",
+    });
   });
 });
 
@@ -765,7 +809,10 @@ app.post("/appAgregarDatosGastos", (req, res) => {
   conexion.query(query, datosGastos, (error) => {
     if (error) return console.error(error.message);
 
-    res.json("Se insertaron correctamente los datos");
+    res.status(200).json({
+      success: true,
+      message: "Se insertaron los datos correctamente",
+    });
   });
 });
 
@@ -780,7 +827,10 @@ app.post("/appAgregarDatosFamiliaDeudas", (req, res) => {
   conexion.query(query, datosFamiliaDeudas, (error) => {
     if (error) return console.error(error.message);
 
-    res.json("Se insertaron correctamente los datos");
+    res.status(200).json({
+      success: true,
+      message: "Se insertaron los datos correctamente",
+    });
   });
 });
 
@@ -801,7 +851,10 @@ app.post("/appAgregarDatosTelefono", (req, res) => {
   conexion.query(query, datosTelefonicos, (error) => {
     if (error) return console.error(error.message);
 
-    res.json("Se insertaron correctamente los datos");
+    res.status(200).json({
+      success: true,
+      message: "Se insertaron los datos correctamente",
+    });
   });
 });
 
@@ -820,7 +873,10 @@ app.post("/appAgregarDatosCobranza", (req, res) => {
   conexion.query(query, datosCobranza, (error) => {
     if (error) return console.error(error.message);
 
-    res.json("Se insertaron correctamente los datos");
+    res.status(200).json({
+      success: true,
+      message: "Se insertaron los datos correctamente",
+    });
   });
 });
 
@@ -845,7 +901,10 @@ app.post("/appAgregarDatosDocumentos", (req, res) => {
   conexion.query(query, datosDocumentos, (error) => {
     if (error) return console.error(error.message);
 
-    res.json("Se insertaron los datos correctamente");
+    res.status(200).json({
+      success: true,
+      message: "Se insertaron los datos correctamente",
+    });
   });
 });
 
@@ -863,10 +922,12 @@ app.post("/appAgregarDatosEspecificiosVivienda", (req, res) => {
   conexion.query(query, datosEspecificosVivienda, (error) => {
     if (error) return console.error(error.message);
 
-    res.json("Se insertaron los datos correctamente");
+    res.status(200).json({
+      success: true,
+      message: "Se insertaron los datos correctamente",
+    });
   });
 });
-
 
 app.post("/appAgregarObservaciones", (req, res) => {
   const datosObservaciones = {
@@ -878,24 +939,177 @@ app.post("/appAgregarObservaciones", (req, res) => {
   conexion.query(query, datosObservaciones, (error) => {
     if (error) return console.error(error.message);
 
-    res.json("Se inserto correctamente el comentario");
+    res.status(200).json({
+      success: true,
+      message: "Se insertaron los datos correctamente",
+    });
   });
 });
 
-app.post("/appAgregarCoordenadas", (req,res)=>{
+app.post("/appAgregarCoordenadas", (req, res) => {
   const datosCoordenadas = {
     coordenadaX: req.body.coordenadaX,
-    coordenadaY : req.body.coordenadaY,
+    coordenadaY: req.body.coordenadaY,
     id_acreditado: req.body.id_acreditado,
-    id_usuario: req.body.id_usuario
+    id_usuario: req.body.id_usuario,
   };
   const query = "INSERT INTO t_coordenadas SET ?";
-  conexion.query(query, datosCoordenadas, (error)=>{
-    if(error) return console.error(error.message);
+  conexion.query(query, datosCoordenadas, (error) => {
+    if (error) return console.error(error.message);
 
-    res.json("Se insertaron correctamente las coordenadas")
-  })
-})
+     res.status(200).json({
+      success: true,
+      message: "Se insertaron los datos correctamente",
+    });
+  });
+});
+
+app.post("/appAgregarTodosLosDatos", (req, res) => {
+  const {
+    id_usuario,
+    t_generales,
+    t_visitas,
+    t_vivienda,
+    t_credito,
+    t_reestructura,
+    t_conyuge,
+    t_familiares,
+    t_solicitante,
+    t_especiconyuge,
+    t_otrosfamiliares,
+    t_gastos,
+    t_deudas,
+    t_telefonos,
+    t_cobranza,
+    t_documentos,
+    t_especivivienda,
+    t_observaciones,
+    t_coordenadas
+  } = req.body;
+
+  // Agregar id_usuario a cada objeto antes de insertarlos
+  if (t_generales) t_generales.id_usuario = id_usuario;
+  if (t_visitas) t_visitas.id_usuario = id_usuario;
+  if (t_vivienda) t_vivienda.id_usuario = id_usuario;
+  if (t_credito) t_credito.id_usuario = id_usuario;
+  if (t_reestructura) t_reestructura.id_usuario = id_usuario;
+  if (t_conyuge) t_conyuge.id_usuario = id_usuario;
+  if (t_familiares) t_familiares.id_usuario = id_usuario;
+  if (t_solicitante) t_solicitante.id_usuario = id_usuario;
+  if (t_especiconyuge) t_especiconyuge.id_usuario = id_usuario;
+  if (t_otrosfamiliares) t_otrosfamiliares.id_usuario = id_usuario;
+  if (t_gastos) t_gastos.id_usuario = id_usuario;
+  if (t_deudas) t_deudas.id_usuario = id_usuario;
+  if (t_telefonos) t_telefonos.id_usuario = id_usuario;
+  if (t_cobranza) t_cobranza.id_usuario = id_usuario;
+  if (t_documentos) t_documentos.id_usuario = id_usuario;
+  if (t_especivivienda) t_especivivienda.id_usuario = id_usuario;
+  if (t_observaciones) t_observaciones.id_usuario = id_usuario;
+  if (t_coordenadas) t_coordenadas.id_usuario = id_usuario;
+
+  conexion.beginTransaction(error => {
+    if (error) {
+      return res.status(500).json({ error: "Error al iniciar transacción" });
+    }
+
+    conexion.query("INSERT INTO t_generales SET ?", t_generales, (error) => {
+      if (error) {
+        return conexion.rollback(() => {
+          res.status(500).json({ error: "Error al insertar t_generales" });
+        });
+      }
+
+      const insertarSiExiste = (tabla, datos, callback) => {
+        if (!datos) return callback(null);
+
+        // Ya agregamos id_usuario arriba, aquí no hace falta repetir
+        conexion.query(`INSERT INTO ${tabla} SET ?`, datos, callback);
+      };
+
+      insertarSiExiste("t_visitas", t_visitas, error => {
+        if (error) return conexion.rollback(() => res.status(500).json({ error }));
+
+        insertarSiExiste("t_vivienda", t_vivienda, error => {
+          if (error) return conexion.rollback(() => res.status(500).json({ error }));
+
+          insertarSiExiste("t_credito", t_credito, error => {
+            if (error) return conexion.rollback(() => res.status(500).json({ error }));
+
+            insertarSiExiste("t_reestructura", t_reestructura, error => {
+              if (error) return conexion.rollback(() => res.status(500).json({ error }));
+
+              insertarSiExiste("t_conyuge", t_conyuge, error => {
+                if (error) return conexion.rollback(() => res.status(500).json({ error }));
+
+                insertarSiExiste("t_familiares", t_familiares, error => {
+                  if (error) return conexion.rollback(() => res.status(500).json({ error }));
+
+                  insertarSiExiste("t_solicitante", t_solicitante, error => {
+                    if (error) return conexion.rollback(() => res.status(500).json({ error }));
+
+                    insertarSiExiste("t_especiconyuge", t_especiconyuge, error => {
+                      if (error) return conexion.rollback(() => res.status(500).json({ error }));
+
+                      insertarSiExiste("t_otrosfamiliares", t_otrosfamiliares, error => {
+                        if (error) return conexion.rollback(() => res.status(500).json({ error }));
+
+                        insertarSiExiste("t_gastos", t_gastos, error => {
+                          if (error) return conexion.rollback(() => res.status(500).json({ error }));
+
+                          insertarSiExiste("t_deudas", t_deudas, error => {
+                            if (error) return conexion.rollback(() => res.status(500).json({ error }));
+
+                            insertarSiExiste("t_telefonos", t_telefonos, error => {
+                              if (error) return conexion.rollback(() => res.status(500).json({ error }));
+
+                              insertarSiExiste("t_cobranza", t_cobranza, error => {
+                                if (error) return conexion.rollback(() => res.status(500).json({ error }));
+
+                                insertarSiExiste("t_documentos", t_documentos, error => {
+                                  if (error) return conexion.rollback(() => res.status(500).json({ error }));
+
+                                  insertarSiExiste("t_especivivienda", t_especivivienda, error => {
+                                    if (error) return conexion.rollback(() => res.status(500).json({ error }));
+
+                                    insertarSiExiste("t_observaciones", t_observaciones, error => {
+                                      if (error) return conexion.rollback(() => res.status(500).json({ error }));
+
+                                      insertarSiExiste("t_coordenadas", t_coordenadas, error => {
+                                        if (error) return conexion.rollback(() => res.status(500).json({ error }));
+
+                                        conexion.commit(commitError => {
+                                          if (commitError) {
+                                            return conexion.rollback(() => {
+                                              res.status(500).json({ error: "Error al confirmar transacción" });
+                                            });
+                                          }
+                                          res.status(200).json({ message: "Todos los datos fueron guardados exitosamente." });
+                                        });
+                                      });
+                                    });
+                                  });
+                                });
+                              });
+                            });
+                          });
+                        });
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+
+    });
+
+  });
+});
+
+
+
 
 app.put("/appActualizarDatosGenerales/:id", (req, res) => {
   const id_acreditado = req.params.id;
@@ -1229,8 +1443,8 @@ app.put("/appActualizarObservaciones/:id", (req, res) => {
   });
 });
 
-app.put("/appActualizarCoordenadas/:id", (req,res)=>{
-  const id_acreditado = req.params.id
+app.put("/appActualizarCoordenadas/:id", (req, res) => {
+  const id_acreditado = req.params.id;
   const nuevosDatos = req.body;
 
   const query = "UPDATE t_coordenadas SET ? WHERE id_acreditado = ?";
@@ -1246,4 +1460,4 @@ app.put("/appActualizarCoordenadas/:id", (req,res)=>{
 
     res.json({ success: true, message: "Coordenadas actualizadas" });
   });
-})
+});
