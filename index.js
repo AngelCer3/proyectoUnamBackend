@@ -33,29 +33,48 @@ app.use(
   })
 );
 
+const bcrypt = require("bcrypt");
+
 app.post("/appInicioSesion", (req, res) => {
+
   const { correo, contrasena } = req.body;
 
   const query =
-    "SELECT id_usuario, correo, id_rol FROM usuarios WHERE correo = ? AND contrasena = ?";
+    "SELECT id_usuario, correo, contrasena, id_rol FROM usuarios WHERE correo = ?";
 
-  conexion.query(query, [correo, contrasena], (error, results) => {
+  conexion.query(query, [correo], async (error, results) => {
+
     if (error) {
       console.error(error);
-      return res.status(500).json({ error: "Error del Servidor" });
+      return res.status(500).json({ error: "Error del servidor" });
     }
 
-    if (results.length > 0) {
-      // Guardamos el ID en la sesión
-      req.session.userId = results[0].id_usuario;
-
-      res.json({
-        message: "Login Exitoso",
-        usuario: results[0],
-      });
-    } else {
-      res.status(401).json({ error: "Credenciales Invalidas" });
+    if (results.length === 0) {
+      return res.status(401).json({ error: "Credenciales inválidas" });
     }
+
+    const usuario = results[0];
+
+    const passwordCorrecta = await bcrypt.compare(
+      contrasena,
+      usuario.contrasena
+    );
+
+    if (!passwordCorrecta) {
+      return res.status(401).json({ error: "Credenciales inválidas" });
+    }
+
+    req.session.userId = usuario.id_usuario;
+
+    res.json({
+      message: "Login exitoso",
+      usuario: {
+        id_usuario: usuario.id_usuario,
+        correo: usuario.correo,
+        id_rol: usuario.id_rol
+      }
+    });
+
   });
 });
 
