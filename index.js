@@ -29,7 +29,7 @@ app.use(
     secret: "clave-secreta",
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false }, // poner `true` solo si usas HTTPS
+    cookie: { secure: false }, 
   })
 );
 
@@ -95,6 +95,167 @@ app.get("/obtenerUsuario/:id", (req, res) => {
       res.status(404).json({ mensaje: "Usuario no encontrado" });
     }
   });
+});
+
+//Obtener Usuarios trabajadores
+app.get("/obtenerTrabajadores", (req, res) => {
+
+  const query =
+    "SELECT id_usuario, correo, id_rol FROM usuarios WHERE id_rol = 2";
+
+  conexion.query(query, (error, results) => {
+
+    if (error) {
+      console.error("Error al obtener trabajadores:", error.message);
+      return res.status(500).json({ error: "Error al obtener trabajadores" });
+    }
+
+    if (results.length > 0) {
+      res.json(results);
+    } else {
+      res.status(404).json({ mensaje: "No se encontraron trabajadores" });
+    }
+
+  });
+
+});
+
+//Registrar trabajadores
+app.post("/registrarUsuario", async (req, res) => {
+
+    const { correo, contrasena, id_rol } = req.body;
+
+    try {
+
+        const hash = await bcrypt.hash(contrasena, 10);
+
+        const query = `
+            INSERT INTO usuarios (correo, contrasena, id_rol)
+            VALUES (?,?,?)
+        `;
+
+        conexion.query(
+            query,
+            [correo, hash, id_rol],
+            (error, results) => {
+
+                if (error) {
+                    console.error("Error al registrar usuario:", error);
+                    return res.status(500).json({
+                        error: "Error al registrar usuario"
+                    });
+                }
+
+                res.json({
+                    mensaje: "Usuario registrado correctamente"
+                });
+
+            }
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            error: "Error al encriptar contraseña"
+        });
+
+    }
+
+});
+
+app.get("/obtenerTrabajadorPorId/:id", (req, res) => {
+
+  const id = req.params.id;
+
+  const query = `
+    SELECT id_usuario, correo, id_rol
+    FROM usuarios
+    WHERE id_usuario = ?
+  `;
+
+  conexion.query(query, [id], (error, results) => {
+
+    if (error) {
+      console.error("Error al obtener trabajador:", error.message);
+      return res.status(500).json({
+        error: "Error al obtener trabajador"
+      });
+    }
+
+    if (results.length > 0) {
+      res.json(results[0]);
+    } else {
+      res.status(404).json({
+        mensaje: "Trabajador no encontrado"
+      });
+    }
+
+  });
+
+});
+
+//Actualizar Trabajador
+app.put("/actualizarRegistro/:id", async (req, res) => {
+
+    const id = req.params.id;
+    const { correo, contrasena, id_rol } = req.body;
+
+    try {
+
+        let query;
+        let params;
+
+        if (contrasena && contrasena.trim() !== "") {
+
+            const hash = await bcrypt.hash(contrasena, 10);
+
+            query = `
+                UPDATE usuarios
+                SET correo = ?, contrasena = ?, id_rol = ?
+                WHERE id_usuario = ?
+            `;
+
+            params = [correo, hash, id_rol, id];
+
+        } else {
+
+            query = `
+                UPDATE usuarios
+                SET correo = ?, id_rol = ?
+                WHERE id_usuario = ?
+            `;
+
+            params = [correo, id_rol, id];
+
+        }
+
+        conexion.query(query, params, (error, results) => {
+
+            if (error) {
+                console.error("Error al actualizar trabajador:", error);
+                return res.status(500).json({
+                    error: "Error al actualizar trabajador"
+                });
+            }
+
+            res.json({
+                mensaje: "Trabajador actualizado correctamente"
+            });
+
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+            error: "Error al procesar contraseña"
+        });
+
+    }
+
 });
 
 app.get("/appObtenerAcreditadosPorId/:id", (req, res) => {
@@ -588,7 +749,7 @@ app.post("/appAgregarDatosReestructura", (req, res) => {
     reestructura_edad: req.body.reestructura_edad,
     reestructura_lugar_nacimiento: req.body.reestructura_lugar_nacimiento,
     reestructura_grado_estudios: req.body.reestructura_grado_estudios,
-    reestructura_conocimiento_comp: req.body.reestructura_conocimiento_comp,
+    reestructura_conocimiento_com: req.body.reestructura_conocimiento_com,
     reestructura_discapacidad: req.body.reestructura_discapacidad,
     reestructura_dictamen: req.body.reestructura_dictamen,
     reestructura_institucion_dictamen:
@@ -933,7 +1094,7 @@ app.post("/appAgregarDatosEspecificiosVivienda", (req, res) => {
     vivienda_tipo_piso: req.body.vivienda_tipo_piso,
     vivienda_tipo_piso_otro: req.body.vivienda_tipo_piso_otro,
     vivienda_tipo_techo: req.body.vivienda_tipo_techo,
-    vivienda_cuenta_bano: req.body.vivienda_cuenta_bano,
+    viviendo_cuenta_bano: req.body.viviendo_cuenta_bano,
     id_acreditado: req.body.id_acreditado,
     id_usuario: req.body.id_usuario,
   };
